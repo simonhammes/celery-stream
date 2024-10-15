@@ -5,7 +5,7 @@ from flask_socketio import SocketIO
 from time import sleep
 
 # TODO: __name__?
-app = Celery('tasks', broker='amqp://rabbitmq')
+app = Celery('tasks', broker='amqp://rabbitmq', broker_connection_retry_on_startup=True)
 socketio = SocketIO(message_queue='redis://redis:6379')
 
 @app.task
