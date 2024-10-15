@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    ports:
+      - 80:5000
+  worker:
+    build: .
+    command: ["celery", "-A", "tasks", "worker"]
+  rabbitmq:
+    image: rabbitmq:4.0.2
+    volumes:
+      - ./config/rabbitmq/logging.conf:/etc/rabbitmq/conf.d/logging.conf:ro
+  redis:
+    image: redis:7.4.1

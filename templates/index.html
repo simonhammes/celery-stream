@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Flask-SocketIO Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function() {
+            var socket = io();
+
+            socket.on('connect', function() {
+                socket.emit('json', {data: 'I\'m connected!'});
+            });
+
+            $('form#primes').submit(function(event) {
+                const data = {
+                    type: 'generate-primes',
+                    count: $('input[name="primes"]').val(),
+                };
+
+                socket.emit('json', data);
+                return false;
+            });
+
+            // Event handler for server sent data.
+            // The callback function is invoked whenever the server emits data
+            // to the client. The data is then displayed in the "Received"
+            // section of the page.
+            socket.on('logs', function(msg, cb) {
+                $('#log').append('<br>' + $('<div/>').text(msg.message).html());
+                if (cb) {
+                    // TODO
+                    cb();
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Hello World!</h1>
+
+    <h2>Send:</h2>
+    <form id="primes" method="POST" action='#'>
+        <input type="number" name="primes" placeholder="Number of primes">
+        <input type="submit" value="Generate">
+    </form>
+
+    <h2>Logs:</h2>
+    <div id="log"></div>
+</body>
+</html>
