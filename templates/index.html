@@ -22,16 +22,8 @@
                 return false;
             });
 
-            // Event handler for server sent data.
-            // The callback function is invoked whenever the server emits data
-            // to the client. The data is then displayed in the "Received"
-            // section of the page.
-            socket.on('logs', function(msg, cb) {
+            socket.on('logs', function(msg) {
                 $('#log').append('<br>' + $('<div/>').text(msg.message).html());
-                if (cb) {
-                    // TODO
-                    cb();
-                }
             });
         });
     </script>
