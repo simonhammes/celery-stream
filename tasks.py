@@ -1,12 +1,13 @@
 import math
+from time import sleep
 
 from celery import Celery
 from flask_socketio import SocketIO
-from time import sleep
 
 # TODO: __name__?
 app = Celery('tasks', broker='amqp://rabbitmq', broker_connection_retry_on_startup=True)
 socketio = SocketIO(message_queue='redis://redis:6379')
+
 
 @app.task
 def generate_primes(count: int):
@@ -16,19 +17,19 @@ def generate_primes(count: int):
     i = 2
     flag = False
 
-    while(X < count):
+    while X < count:
         flag = True
 
         for j in range(2, math.floor(math.sqrt(i)) + 1):
-            if (i%j == 0):
+            if i % j == 0:
                 flag = False
                 break
 
-        if(flag):
+        if flag:
             socketio.emit('logs', {'message': f'Next prime: {i}'})
-            X+=1
+            X += 1
             sleep(1)
 
-        i+=1
+        i += 1
 
     socketio.emit('logs', {'message': f'Successfully generated {count} primes'})
